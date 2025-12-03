@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GREYHOUND Roadmap 2025-2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* GREYHOUND Custom Fonts (Oscine) */
+        @font-face {
+            font-family: 'GREYHOUND';
+            src: url('https://greyhound-software.com/assets/font/GREYHOUND_L.woff2') format('woff2');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'GREYHOUND';
+            src: url('https://greyhound-software.com/assets/font/GREYHOUND_R.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'GREYHOUND';
+            src: url('https://greyhound-software.com/assets/font/GREYHOUND_B.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'GREYHOUND';
+            src: url('https://greyhound-software.com/assets/font/GREYHOUND_XB.woff2') format('woff2');
+            font-weight: 800;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* Typography settings */
+        body {
+            font-family: 'GREYHOUND', 'Outfit', 'Century Gothic', sans-serif;
+            background-color: #000000; /* Deep Black */
+            color: #FFFFFF;
+        }
+
+        /* Signature Gradient Definition (für AI-Themen) */
+        .signature-gradient-text {
+            background: linear-gradient(90deg, #00ffc0 0%, #ab4ef0 50%, #fb3bfb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .ai-gradient-border {
+            position: relative;
+            background: #111111;
+            border-radius: 1rem; /* 16px */
+            z-index: 1;
+        }
+
+        .ai-gradient-border::before {
+            content: "";
+            position: absolute;
+            inset: -2px; /* Erhöht für 2px Rahmenbreite */
+            border-radius: 1.1rem; 
+            padding: 2px; /* Rahmenbreite auf 2px gesetzt */
+            background: linear-gradient(90deg, #00ffc0 0%, #ab4ef0 50%, #fb3bfb 100%); 
+            -webkit-mask: 
+               linear-gradient(#fff 0 0) content-box, 
+               linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            z-index: -1;
+        }
+
+        /* Standard Card Style (für nicht-AI Themen) */
+        .standard-card {
+            background: #111111;
+            border-radius: 1rem;
+            padding: 1.25rem; 
+            border: 2px solid #262626; /* Dunklerer, schlichter Rahmen */
+            transition: all 0.3s ease;
+        }
+        
+        .standard-card:hover {
+            border-color: #404040;
+            background: #1a1a1a;
+        }
+
+        /* Neon Glow Effects (für AI-Themen) */
+        .glow-cyan {
+            box-shadow: 0 0 40px -10px rgba(0, 255, 192, 0.15);
+        }
+        
+        .glow-magenta {
+            box-shadow: 0 0 40px -10px rgba(251, 59, 251, 0.15);
+        }
+
+        /* Custom Scrollbar for columns */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 2px;
+        }
+        .custom-scrollbar:hover::-webkit-scrollbar-thumb {
+            background: #555;
+        }
+
+        /* Priority Dot */
+        .prio-dot {
+            height: 8px;
+            width: 8px;
+            background-color: #fb3bfb; /* Magenta Pink for High Prio visibility */
+            border-radius: 50%;
+            box-shadow: 0 0 8px #fb3bfb;
+            display: inline-block;
+            margin-right: 4px;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col">
+
+    <!-- Header -->
+    <header class="flex-none pt-8 pb-4 border-b border-gray-900 bg-[#050505] z-20 px-8">
+        <div class="max-w-[1800px] mx-auto flex justify-between items-center">
+            
+            <!-- Logo & Title Container -->
+            <div class="flex items-center gap-6">
+                <!-- SVG Logo -->
+                <svg id="greyhound--logo-mobile" class="w-12 h-12 fill-white" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 57 57">
+                    <path d="M57 23c0-3.5-.2-7.4-.5-8.9-.5-2.9-1.3-6.3-4.3-9.3C49 1.8 45.7 1 42.9.5 41.5.2 37.4.2 34 0h-5.5s-7.8 0-12.2.2c-1 0-1.9.2-2.4.2-2.9.5-6.3 1.3-9.3 4.3C1.6 7.9.8 11.2.3 14 0 16.8 0 27.7 0 28.5c0 .8 0 11.7.5 14.4.5 2.8 1.3 6.3 4.3 9.3 3.2 3 6.5 3.8 9.3 4.3 2.2.3 10.6.5 13.5.5h3.7c2.7 0 6.6 0 9.5-.2.9 0 1.9-.2 2.4-.2 2.8-.5 6.3-1.3 9.3-4.3 3-3.2 3.8-6.5 4.3-9.3.2-2.8.2-13.7.2-14.5V23zM20.3 43.5 11 38.1V17.9l5.5-3.2 9.3 5.4-5.5 3.2v20.2zm26.2-5.2L28.7 48.6l-5.5-3.2v-11l5.5 3.2 17.9-10.3v11zm0-14.2-9.3 5.4v-6.3L19.6 13 29 7.6l17.6 10.1c-.1 0-.1 6.4-.1 6.4z"></path>
+                </svg>
+                
+                <div>
+                    <h1 class="text-3xl font-extrabold tracking-tight mb-0.5">
+                        ROADMAP <span class="signature-gradient-text">2025 — 2026</span>
+                    </h1>
+                    <p class="text-gray-400 text-xs tracking-wide uppercase">Strategic Development Plan</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 text-[10px] text-gray-500 uppercase tracking-widest">
+                    <span class="prio-dot"></span> High Priority
+                </div>
+                <div class="flex items-center gap-2 text-[10px] text-gray-500 uppercase tracking-widest ml-4">
+                    <span class="h-2 w-2 rounded-full bg-gradient-to-r from-[#00ffc0] to-[#fb3bfb]"></span> AI Focus
+                </div>
+                <button class="px-6 py-2 bg-[#f0ff00] text-black font-bold rounded-full hover:shadow-[0_0_15px_rgba(240,255,0,0.4)] transition-all duration-300 text-sm ml-6">
+                    Export View
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content: Horizontal Scroll / Grid -->
+    <main class="flex-1 w-full h-full overflow-hidden px-8 pb-4 pt-4">
+        <!-- Grid Container with matched max-width to header for alignment -->
+        <div class="max-w-[1800px] mx-auto h-full grid grid-cols-5 gap-6">
+
+            <!-- Q4 2025 -->
+            <div class="flex flex-col h-full min-h-0">
+                <div class="flex-none pb-2 border-b border-[#f0ff00] mb-3">
+                    <h2 class="text-xl font-bold text-[#f0ff00]">Q4 2025</h2>
+                    <span class="text-[10px] text-gray-500 uppercase tracking-widest">Foundation & Beta</span>
+                </div>
+                
+                <div class="overflow-y-auto p-1 space-y-3 h-full custom-scrollbar pr-2">
+                    
+                    <!-- Item (High Prio) -->
+                    <div class="standard-card group">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-bold text-base text-white group-hover:text-[#00ffc0] transition-colors">Marktplatz Testsysteme</h3>
+                            <div class="flex pt-1"><span class="prio-dot"></span></div>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed">Aufbau dedizierter Testumgebungen für Marktplätze, um Bugs sicher zu reproduzieren.</p>
+                        <div class="mt-2 text-[10px] text-[#00ffc0] font-mono opacity-80">Ref: Abstimmung JTL</div>
+                    </div>
+
+                    <!-- Item (High Prio - AI Tech - AI BORDER ADDED) -->
+                    <div class="ai-gradient-border p-4 glow-magenta group hover:bg-[#1a1a1a] transition-colors">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-bold text-base text-white mb-1 group-hover:text-[#fb3bfb] transition-colors">Telemetrie interne Nutzung</h3>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[9px] bg-gray-800 text-white px-1.5 py-0.5 rounded-full uppercase text-center">XMAS</span>
+                                <div class="flex pt-1"><span class="prio-dot"></span></div>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed">Bereitstellung grundlegender Telemetrie-Daten für die interne technische Überwachung und AI-Performance.</p>
+                    </div>
+
+                    <!-- Item (Standard - XMAS TAG ADDED) -->
+                    <div class="standard-card group">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-bold text-base text-white mb-1">Workflowsystem 0.1</h3>
+                            <span class="text-[9px] bg-gray-800 text-white px-1.5 py-0.5 rounded-full uppercase text-center">XMAS</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed">Erster Prototyp des neuen Regelsystems mit dem Ziel, die alte Logik abzulösen.</p>
+                    </div>
+
+                    <!-- Item (Standard XMAS) -->
+                    <div class="standard-card group">
+                        <div class="flex justify-between items-start mb-1">
+                             <h3 class="font-bold text-base text-white">Server 5.7 Beta</h3>
+                             <span class="text-[9px] bg-gray-800 text-white px-1.5 py-0.5 rounded-full uppercase text-center">XMAS</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed">Release der "XMAS Edition" inklusive MCP-Server-Integration.</p>
+                    </div>
+
+                    <!-- Item (Standard - New) -->
+                    <div class="standard-card group">
+                        <h3 class="font-bold text-base text-white mb-1">Formularfunktionen 1.0</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Bereitstellung von Vorlagen für Formulare, um strukturierte Prozesse (z.B. ERV) abzubilden.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Q1 2026 -->
+            <div class="flex flex-col h-full min-h-0">
+                <div class="flex-none pb-2 border-b border-[#00ffc0] mb-3">
+                    <h2 class="text-xl font-bold text-[#00ffc0]">Q1 2026</h2>
+                    <span class="text-[10px] text-gray-500 uppercase tracking-widest">JTL Integration & Core</span>
+                </div>
+
+                <div class="overflow-y-auto p-1 space-y-3 h-full custom-scrollbar pr-2">
+
+                    <!-- Item (High Prio - ServiceDesk TAG ADDED) -->
+                    <div class="standard-card group">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-bold text-base text-white group-hover:text-[#00ffc0] transition-colors">JTL Service Desk</h3>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[9px] bg-gray-800 text-white px-1.5 py-0.5 rounded-full uppercase text-center">ServiceDesk</span>
+                                <div class="flex pt-1"><span class="prio-dot"></span></div>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed">Abgespeckter Web Client für Ticketbearbeitung, tief integriert in das JTL-Ökosystem.</p>
+                        <div class="mt-2 text-[10px] text-gray-500 font-mono">Unity Rebranding Only</div>
+                    </div>
+
+                    <!-- Item (High Prio - Critical - MS: Archive TAG RENAMED) -->
+                    <div class="standard-card group">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-bold text-base text-white group-hover:text-[#ab4ef0] transition-colors">JTL-ARCHIVE 2.0</h3>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[9px] bg-gray-800 text-white px-1.5 py-0.5 rounded-full uppercase text-center">Milestone JTL-Archive</span>
+                                <div class="flex pt-1"><span class="prio-dot"></span><span class="prio-dot"></span></div>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed">Weiterentwicklung der Archiv-Lösung mit Fokus auf automatisierte Bereitstellung und Export.</p>
+                    </div>
+
+                    <!-- Item (High Prio) -->
+                    <div class="standard-card group">
+                         <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-bold text-base text-white">Admin in Webclient</h3>
+                            <div class="flex pt-1"><span class="prio-dot"></span></div>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed">Integration der Verwaltungsoberfläche in den Webclient.</p>
+                    </div>
+
+                    <!-- Item (High Prio) -->
+                    <div class="standard-card group">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-bold text-base text-white">Lizenzmodell CUL -> CAL</h3>
+                            <div class="flex pt-1"><span class="prio-dot"></span></div>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed">Strategischer Wechsel von Concurrent zu Named User Licenses.</p>
+                    </div>
+
+                    <!-- Item (Standard - New) -->
+                    <div class="standard-card group">
+                        <h3 class="font-bold text-base text-white mb-1">Migration Gitea -> Jira</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Konsolidierung der Tool-Landschaft: Wechsel von ClickUp/Gitea zu Jira/Confluence.</p>
+                    </div>
+
+                     <!-- Item (AI Focus) -->
+                     <div class="ai-gradient-border p-4 glow-magenta group hover:bg-[#1a1a1a] transition-colors">
+                        <h3 class="font-bold text-base text-white mb-1 group-hover:text-[#fb3bfb] transition-colors">Agenten-Feedback & AI</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Erfassung qualitativer Metriken zur Bewertung der KI-Antwortqualität durch Agenten-Feedback.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Q2 2026 -->
+            <div class="flex flex-col h-full min-h-0">
+                <div class="flex-none pb-2 border-b border-[#ab4ef0] mb-3">
+                    <h2 class="text-xl font-bold text-[#ab4ef0]">Q2 2026</h2>
+                    <span class="text-[10px] text-gray-500 uppercase tracking-widest">AI Intelligence & Insights</span>
+                </div>
+
+                <div class="overflow-y-auto p-1 space-y-3 h-full custom-scrollbar pr-2">
+
+                    <!-- Item (AI Focus) -->
+                    <div class="ai-gradient-border p-4 glow-magenta group hover:bg-[#1a1a1a] transition-colors">
+                        <h3 class="font-bold text-base text-white mb-1 group-hover:text-[#fb3bfb] transition-colors">Tiger AI Knowledge Base</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Anbindung an die zentrale Wissensdatenbank des "Tiger Teams" (RAG).</p>
+                    </div>
+
+                    <!-- Item (Standard) -->
+                    <div class="standard-card group">
+                        <h3 class="font-bold text-base text-white mb-1">Dashboard 1.1</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Erweiterung um Kostentransparenz und Anzeige volumenbasierter Verbrauchsdaten.</p>
+                    </div>
+                    
+                    <!-- Item (Standard) -->
+                     <div class="standard-card group">
+                        <h3 class="font-bold text-base text-white mb-1">Webclient 6.0 Prototype</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Konzeption und Prototyping der nächsten Client-Generation auf Basis neuer Web-Komponenten.</p>
+                    </div>
+
+                    <!-- Item (Standard - New) -->
+                    <div class="standard-card group">
+                        <h3 class="font-bold text-base text-white mb-1">Rebranding des GCC</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Visuelle Anpassung des GCC an das JTL Group Corporate Design.</p>
+                    </div>
+
+                    <!-- Item (AI Focus) -->
+                    <div class="ai-gradient-border p-4 glow-cyan group hover:bg-[#1a1a1a] transition-colors">
+                        <h3 class="font-bold text-base text-white mb-1 group-hover:text-[#00ffc0] transition-colors">Produktfragen AI</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Befähigung der KI, konkrete Fragen zu Lagerbestand und Artikelvarianten via API zu beantworten.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Q3 2026 -->
+            <div class="flex flex-col h-full min-h-0">
+                <div class="flex-none pb-2 border-b border-[#fb3bfb] mb-3">
+                    <h2 class="text-xl font-bold text-[#fb3bfb]">Q3 2026</h2>
+                    <span class="text-[10px] text-gray-500 uppercase tracking-widest">Connect & Scale</span>
+                </div>
+
+                <div class="overflow-y-auto p-1 space-y-3 h-full custom-scrollbar pr-2">
+
+                    <!-- Item (High Prio) -->
+                    <div class="standard-card group">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-bold text-base text-white group-hover:text-[#00ffc0] transition-colors">Anbindung JTL Shipping</h3>
+                            <div class="flex pt-1"><span class="prio-dot"></span></div>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed">Tiefe Integration von Tracking-Daten und externen Diensten (Returnless, Bringly).</p>
+                    </div>
+
+                    <!-- Item (Standard - New) -->
+                    <div class="standard-card group">
+                        <h3 class="font-bold text-base text-white mb-1">eBay Connect Addon 2.0</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Modernisierung des eBay-Konnektors, potenziell auf neuer technischer Basis.</p>
+                    </div>
+
+                    <!-- Item (Standard - New) -->
+                    <div class="standard-card group">
+                        <h3 class="font-bold text-base text-white mb-1">JERA Integration</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Anbindung des Validierungsdienstes für E-Rechnungen und DATEV-Übergabe.</p>
+                    </div>
+
+                    <!-- Item (Standard) -->
+                    <div class="standard-card group">
+                        <h3 class="font-bold text-base text-white mb-1">GCC -> Salesforce</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Strategische Migration kaufmännischer Prozesse vom GCC in die zentrale Salesforce-Plattform.</p>
+                    </div>
+
+                    <!-- Item (Standard - Moved) -->
+                    <div class="standard-card group">
+                        <h3 class="font-bold text-base text-white mb-1">GCC Payment Integration</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Automatisierung von Zahlungsprozessen (PayPal, Kreditkarte) im GCC.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Q4 2026 -->
+            <div class="flex flex-col h-full min-h-0">
+                <div class="flex-none pb-2 border-b border-gray-700 mb-3">
+                    <h2 class="text-xl font-bold text-white">Q4 2026</h2>
+                    <span class="text-[10px] text-gray-500 uppercase tracking-widest">Next Era</span>
+                </div>
+
+                <div class="overflow-y-auto p-1 space-y-3 h-full custom-scrollbar pr-2">
+
+                    <!-- Item (Standard) -->
+                    <div class="standard-card group">
+                        <h3 class="font-bold text-base text-white mb-1">Hosting Modernisierung</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Ablösung der Wine-Emulation durch native Linux/Docker-Lösungen.</p>
+                    </div>
+
+                    <!-- Item (Merged: Addon & Messenger) -->
+                    <div class="standard-card group">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-bold text-base text-white">Addon & Messenger (New Era)</h3>
+                            <div class="flex pt-1"><span class="prio-dot"></span></div>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed">Modernisierung der Infrastruktur und Ablösung der Infinity-Engine sowie Windows-Abhängigkeiten.</p>
+                    </div>
+
+                    <!-- Item (AI Focus / Risk) -->
+                    <div class="ai-gradient-border p-4 glow-magenta group hover:bg-[#1a1a1a] transition-colors">
+                        <h3 class="font-bold text-base text-white mb-1">Voicebot & Telephony</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Exploration von AI-gestützter Spracherkennung und nativer Telefonie-Integration.</p>
+                        <div class="mt-2 text-[9px] text-[#fb3bfb] font-mono opacity-80">RISK: Infinity Engine</div>
+                    </div>
+
+                    <!-- Item (Standard - New) -->
+                    <div class="standard-card group">
+                        <h3 class="font-bold text-base text-white mb-1">Word Addon</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Modernisierung der Word-Integration zur Archivierung.</p>
+                    </div>
+
+                    <!-- Item (Merged: Mobile Clients) -->
+                    <div class="standard-card group">
+                        <h3 class="font-bold text-base text-white mb-1">Mobile Clients (iOS & Android)</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Weiterentwicklung und Modernisierung der nativen Apps (Facelift) sowie strategische Neuausrichtung.</p>
+                    </div>
+
+                    <!-- Item (Standard - Merged Connectors) -->
+                    <div class="standard-card group">
+                        <h3 class="font-bold text-base text-white mb-1">Marktplatz Connectors</h3>
+                        <p class="text-gray-400 text-xs leading-relaxed">Neue Konnektoren für Amazon, OTTO, Kaufland und Mirakl.</p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>
