@@ -3,509 +3,1202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GREYHOUND Roadmap 2025-2026</title>
+    <title>GREYHOUND AI Products - SteerCo Dashboard</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <!-- PapaParse für CSV Parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Google Fonts: Outfit (Fallback für Oscine) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        ghBlack: '#050505',
+                        ghSurface: '#111111',
+                        ghCyan: '#00ffc0',
+                        ghViolet: '#ab4ef0',
+                        ghMagenta: '#fb3bfb',
+                        ghNeon: '#f0ff00',
+                        ghRed: '#ff3366'
+                    },
+                    backgroundImage: {
+                        'signature-gradient': 'linear-gradient(90deg, #00ffc0 0%, #ab4ef0 50%, #fb3bfb 100%)',
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        /* GREYHOUND Custom Fonts (Oscine) */
-        @font-face {
-            font-family: 'GREYHOUND';
-            src: url('https://greyhound-software.com/assets/font/GREYHOUND_L.woff2') format('woff2');
-            font-weight: 300;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'GREYHOUND';
-            src: url('https://greyhound-software.com/assets/font/GREYHOUND_R.woff2') format('woff2');
-            font-weight: 400;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'GREYHOUND';
-            src: url('https://greyhound-software.com/assets/font/GREYHOUND_B.woff2') format('woff2');
-            font-weight: 700;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'GREYHOUND';
-            src: url('https://greyhound-software.com/assets/font/GREYHOUND_XB.woff2') format('woff2');
-            font-weight: 800;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        /* Typography settings */
         body {
-            font-family: 'GREYHOUND', 'Outfit', 'Century Gothic', sans-serif;
-            background-color: #000000; /* Deep Black */
+            background-color: #050505;
             color: #FFFFFF;
         }
+        
+        .signature-border {
+            position: relative;
+            background: #111111;
+            border-radius: 16px;
+        }
+        
+        .signature-border::before {
+            content: "";
+            position: absolute;
+            inset: 0px;
+            border-radius: 16px;
+            padding: 1px;
+            background: #333333;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            z-index: 0;
+            transition: all 0.3s ease;
+        }
 
-        /* Signature Gradient Definition */
-        .signature-gradient-text {
+        .signature-border:hover::before {
+            inset: -3px;
+            border-radius: 19px;
+            padding: 3px;
+            background: linear-gradient(90deg, #00ffc0 0%, #ab4ef0 50%, #fb3bfb 100%);
+        }
+
+        .text-gradient {
             background: linear-gradient(90deg, #00ffc0 0%, #ab4ef0 50%, #fb3bfb 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        .ambient-glow {
+            box-shadow: 0 0 20px rgba(0, 255, 192, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #f0ff00;
+            color: #000000;
+            border-radius: 9999px;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
         
-        /* AI Border (Signature Gradient) */
-        .ai-gradient-border {
-            position: relative;
-            background: #111111;
-            border-radius: 1rem;
-            z-index: 1;
+        .btn-primary:hover {
+            box-shadow: 0 0 15px rgba(240, 255, 0, 0.4);
+            transform: translateY(-1px);
         }
-        .ai-gradient-border::before {
-            content: "";
-            position: absolute;
-            inset: -2px;
-            border-radius: 1.1rem; 
-            padding: 2px;
-            background: linear-gradient(90deg, #00ffc0 0%, #ab4ef0 50%, #fb3bfb 100%); 
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            z-index: -1;
+        
+        /* Custom File Input Styling */
+        input[type="file"] {
+            display: none;
         }
-
-        /* Pillar Border (Neon Yellow) */
-        .pillar-neon-border {
-            position: relative;
-            background: #111111;
-            border-radius: 1rem;
-            z-index: 1;
-            border: 2px solid #f0ff00;
-            box-shadow: 0 0 20px -5px rgba(240, 255, 0, 0.3);
-        }
-
-        /* Standard Card Style */
-        .standard-card {
-            background: #111111;
-            border-radius: 1rem;
-            padding: 1.25rem; 
-            border: 2px solid #262626;
-            transition: all 0.3s ease;
-        }
-        .standard-card:hover {
-            border-color: #404040;
-            background: #1a1a1a;
-        }
-
-        /* Low Priority Card Style */
-        .low-prio-card {
-            background: #0a0a0a;
-            border-radius: 1rem;
-            padding: 1.25rem; 
-            border: 2px dashed #333;
-            opacity: 0.6;
-            transition: all 0.3s ease;
-        }
-        .low-prio-card:hover {
-            opacity: 1;
-            border-color: #555;
-            border-style: solid;
-            background: #111;
-        }
-
-        /* Dependency Arrow Icon */
-        .dependency-arrow {
-            color: #555;
-            font-size: 0.7rem;
-            margin-top: 0.5rem;
-            display: flex;
+        .file-upload-label {
+            cursor: pointer;
+            display: inline-flex;
             align-items: center;
-            gap: 0.25rem;
-        }
-        .dependency-arrow span {
-            color: #888;
-            font-family: monospace;
-        }
-
-        /* Glow Effects */
-        .glow-cyan { box-shadow: 0 0 30px -5px rgba(0, 255, 192, 0.2); }
-        .glow-magenta { box-shadow: 0 0 30px -5px rgba(251, 59, 251, 0.2); }
-        .glow-signature { box-shadow: 0 0 40px -10px rgba(171, 78, 240, 0.3); }
-
-        /* Custom Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
-        .custom-scrollbar:hover::-webkit-scrollbar-thumb { background: #555; }
-
-        /* Priority Dot */
-        .prio-dot {
-            height: 8px;
-            width: 8px;
-            background-color: #fb3bfb;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #fb3bfb;
-            display: inline-block;
-            margin-right: 4px;
         }
     </style>
 </head>
-<body class="h-screen w-screen overflow-hidden flex flex-col">
+<body class="p-6 md:p-10 font-sans min-h-screen relative">
 
-    <!-- Header -->
-    <header class="flex-none pt-8 pb-4 border-b border-gray-900 bg-[#050505] z-20 px-8">
-        <div class="max-w-[1800px] mx-auto flex justify-between items-center">
-            
-            <div class="flex items-center gap-6">
-                <!-- SVG Logo -->
-                <svg id="greyhound--logo-mobile" class="w-12 h-12 fill-white" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 57 57">
-                    <path d="M57 23c0-3.5-.2-7.4-.5-8.9-.5-2.9-1.3-6.3-4.3-9.3C49 1.8 45.7 1 42.9.5 41.5.2 37.4.2 34 0h-5.5s-7.8 0-12.2.2c-1 0-1.9.2-2.4.2-2.9.5-6.3 1.3-9.3 4.3C1.6 7.9.8 11.2.3 14 0 16.8 0 27.7 0 28.5c0 .8 0 11.7.5 14.4.5 2.8 1.3 6.3 4.3 9.3 3.2 3 6.5 3.8 9.3 4.3 2.2.3 10.6.5 13.5.5h3.7c2.7 0 6.6 0 9.5-.2.9 0 1.9-.2 2.4-.2 2.8-.5 6.3-1.3 9.3-4.3 3-3.2 3.8-6.5 4.3-9.3.2-2.8.2-13.7.2-14.5V23zM20.3 43.5 11 38.1V17.9l5.5-3.2 9.3 5.4-5.5 3.2v20.2zm26.2-5.2L28.7 48.6l-5.5-3.2v-11l5.5 3.2 17.9-10.3v11zm0-14.2-9.3 5.4v-6.3L19.6 13 29 7.6l17.6 10.1c-.1 0-.1 6.4-.1 6.4z"></path>
-                </svg>
-                
-                <div>
-                    <h1 class="text-3xl font-extrabold tracking-tight mb-0.5">
-                        GREYHOUND ROADMAP <span class="signature-gradient-text">2025 — 2026</span>
-                    </h1>
-                    <p class="text-gray-400 text-xs tracking-wide uppercase">Strategic Development Plan</p>
+    <!-- Header mit GREYHOUND Logo -->
+    <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6 border-b border-gray-800 pb-6">
+        <div class="flex items-center gap-4">
+            <!-- GREYHOUND Logo (SVG) in reinweiß -->
+            <svg id="greyhound--logo-mobile" class="h-10 w-10" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 57 57">
+                <path fill="#FFFFFF" d="M57 23c0-3.5-.2-7.4-.5-8.9-.5-2.9-1.3-6.3-4.3-9.3C49 1.8 45.7 1 42.9.5 41.5.2 37.4.2 34 0h-5.5s-7.8 0-12.2.2c-1 0-1.9.2-2.4.2-2.9.5-6.3 1.3-9.3 4.3C1.6 7.9.8 11.2.3 14 0 16.8 0 27.7 0 28.5c0 .8 0 11.7.5 14.4.5 2.8 1.3 6.3 4.3 9.3 3.2 3 6.5 3.8 9.3 4.3 2.2.3 10.6.5 13.5.5h3.7c2.7 0 6.6 0 9.5-.2.9 0 1.9-.2 2.4-.2 2.8-.5 6.3-1.3 9.3-4.3 3-3.2 3.8-6.5 4.3-9.3.2-2.8.2-13.7.2-14.5V23zM20.3 43.5 11 38.1V17.9l5.5-3.2 9.3 5.4-5.5 3.2v20.2zm26.2-5.2L28.7 48.6l-5.5-3.2v-11l5.5 3.2 17.9-10.3v11zm0-14.2-9.3 5.4v-6.3L19.6 13 29 7.6l17.6 10.1c-.1 0-.1 6.4-.1 6.4z"></path>
+            </svg>
+
+            <div class="hidden md:block h-10 w-px bg-gray-800 ml-2"></div>
+
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight mb-0.5"><span class="text-gradient">AI Performance</span></h1>
+                <div class="flex items-center gap-2">
+                    <p class="text-gray-400 text-xs uppercase tracking-wider font-semibold">SteerCo Reporting</p>
+                    <span id="dataTimestamp" class="text-ghCyan text-xs hidden border-l border-gray-600 pl-2 py-0.5">Keine Daten geladen</span>
                 </div>
             </div>
-
-            <div class="flex items-center gap-6">
-                <div class="flex items-center gap-2 text-[10px] text-gray-500 uppercase tracking-widest">
-                    <span class="h-2 w-2 rounded-full bg-[#f0ff00] border border-[#f0ff00]"></span> Main Pillar
-                </div>
-                <div class="flex items-center gap-2 text-[10px] text-gray-500 uppercase tracking-widest">
-                    <span class="h-2 w-2 rounded-full bg-gradient-to-r from-[#00ffc0] via-[#ab4ef0] to-[#fb3bfb]"></span> AI Focus
-                </div>
-                <div class="flex items-center gap-2 text-[10px] text-gray-500 uppercase tracking-widest">
-                    <span class="prio-dot"></span> High Priority
-                </div>
-                <div class="flex items-center gap-2 text-[10px] text-gray-500 uppercase tracking-widest">
-                    <span class="h-2 w-2 rounded-full border border-dashed border-gray-600"></span> Low Prio
-                </div>
-            </div>
+        </div>
+        
+        <div class="flex flex-col items-start md:items-end gap-3 w-full md:w-auto mt-4 md:mt-0">
+            <label class="file-upload-label btn-primary px-6 py-2.5 text-sm w-full md:w-auto justify-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                Aktuelle CSV laden
+                <input type="file" id="csvFileInput" accept=".csv">
+            </label>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="flex-1 w-full h-full overflow-hidden px-8 pb-4 pt-4">
-        <div class="max-w-[1800px] mx-auto h-full grid grid-cols-5 gap-6">
-
-            <!-- Q4 2025 -->
-            <div class="flex flex-col h-full min-h-0">
-                <div class="flex-none pb-2 border-b border-[#f0ff00] mb-3">
-                    <h2 class="text-xl font-bold text-white">Q4 2025</h2>
-                    <span class="text-[10px] text-gray-500 uppercase tracking-widest">Foundation & Beta</span>
-                </div>
-                
-                <div class="overflow-y-auto p-1 space-y-3 h-full custom-scrollbar pr-2">
-                    
-                    <!-- 1. Main Pillar (Webclient 5.0) -->
-                    <div class="pillar-neon-border p-4 group hover:bg-[#1a1a1a] transition-colors">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-base text-white group-hover:text-[#f0ff00] transition-colors">GREYHOUND Webclient 5.0</h3>
-                            <div class="flex pt-1"><span class="prio-dot"></span></div>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">Weiterentwicklung und Optimierung des aktuellen Webclients als zentrale Plattform.</p>
-                    </div>
-
-                    <!-- 2. AI (Telemetrie) -->
-                    <div class="ai-gradient-border p-4 glow-magenta group hover:bg-[#1a1a1a] transition-colors">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-base text-white mb-1">Telemetrie für interne Nutzung bereitstellen</h3>
-                            <div class="flex items-center gap-2">
-                                <span class="text-[9px] bg-gray-800 text-white px-1.5 py-0.5 rounded-full uppercase text-center">XMAS</span>
-                                <div class="flex pt-1"><span class="prio-dot"></span></div>
-                            </div>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">Technische Basis für Monitoring und AI-Performance-Messung.</p>
-                    </div>
-
-                    <!-- 3. High Prio (Marktplatz Infra) -->
-                    <div class="standard-card group">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-base text-white group-hover:text-[#00ffc0] transition-colors">Beschaffung von Marktplatz-Testinfrastruktur</h3>
-                            <div class="flex pt-1"><span class="prio-dot"></span></div>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">Sicherstellung der Wartbarkeit und Qualitätssicherung für Marktplatz-Addons.</p>
-                        <div class="dependency-arrow">
-                            <span>→</span> Basis für "Marktplatz Connectors" (Q3/Q4)
-                        </div>
-                    </div>
-
-                    <!-- 4. Normal (Workflow) -->
-                    <div class="standard-card group">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-base text-white mb-1">Workflowsystem 1.0 beta</h3>
-                            <span class="text-[9px] bg-gray-800 text-white px-1.5 py-0.5 rounded-full uppercase text-center">XMAS</span>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">Erster Prototyp des neuen Regelsystems mit Server 5.7.</p>
-                    </div>
-
-                    <!-- 5. Normal (Server) -->
-                    <div class="standard-card group">
-                        <div class="flex justify-between items-start mb-1">
-                             <h3 class="font-bold text-base text-white">Server 5.7 Beta</h3>
-                             <span class="text-[9px] bg-gray-800 text-white px-1.5 py-0.5 rounded-full uppercase text-center">XMAS</span>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">Release der "XMAS Edition" inkl. MCP-Server. Beta-Status.</p>
-                    </div>
-
-                    <!-- 6. Normal (Migration) -->
-                    <div class="standard-card group">
-                        <h3 class="font-bold text-base text-white mb-1">Migration Gitea/ClickUp -> Jira/Confluence</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed">Konsolidierung der Tool-Landschaft.</p>
-                    </div>
-
-                </div>
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="signature-border ambient-glow p-5 flex flex-col justify-between relative group">
+            <button onclick="openInfoModal('mrr')" class="absolute top-4 right-4 text-gray-500 hover:text-ghCyan transition-colors focus:outline-none z-10" title="Details anzeigen">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </button>
+            <div class="pr-6">
+                <h3 class="text-gray-400 text-sm font-medium mb-1">Total KI MRR (Aktiv)</h3>
+                <div class="text-3xl font-bold text-white" id="kpi-mrr">0 €</div>
             </div>
-
-            <!-- Q1 2026 -->
-            <div class="flex flex-col h-full min-h-0">
-                <div class="flex-none pb-2 border-b border-[#00ffc0] mb-3">
-                    <h2 class="text-xl font-bold text-[#00ffc0]">Q1 2026</h2>
-                    <span class="text-[10px] text-gray-500 uppercase tracking-widest">JTL Integration & Core</span>
-                </div>
-
-                <div class="overflow-y-auto p-1 space-y-3 h-full custom-scrollbar pr-2">
-
-                    <!-- 1. Main Pillar (ServiceDesk) -->
-                    <div class="pillar-neon-border p-4 group hover:bg-[#1a1a1a] transition-colors">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-base text-white group-hover:text-[#f0ff00] transition-colors">JTL-ServiceDesk</h3>
-                            <div class="flex items-center gap-2">
-                                <span class="text-[9px] bg-gray-800 text-white px-1.5 py-0.5 rounded-full uppercase text-center">ServiceDesk</span>
-                                <div class="flex pt-1"><span class="prio-dot"></span></div>
-                            </div>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">Nahtlose Integration in die JTL-Welt. Fokus auf effiziente Ticketbearbeitung.</p>
-                    </div>
-
-                    <!-- 2. Main Pillar (Archive) -->
-                    <div class="pillar-neon-border p-4 group hover:bg-[#1a1a1a] transition-colors">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-base text-white group-hover:text-[#f0ff00] transition-colors">JTL-Archive</h3>
-                            <div class="flex items-center gap-2">
-                                <span class="text-[9px] bg-gray-800 text-white px-1.5 py-0.5 rounded-full uppercase text-center">Milestone JTL-Archive</span>
-                                <div class="flex pt-1"><span class="prio-dot"></span><span class="prio-dot"></span></div>
-                            </div>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">Archiv-Lösung mit automatisierter Bereitstellung im JTL-Look.</p>
-                    </div>
-
-                    <!-- 3. AI (Agenten-Feedback) -->
-                    <div class="ai-gradient-border p-4 glow-magenta group hover:bg-[#1a1a1a] transition-colors">
-                        <h3 class="font-bold text-base text-white mb-1">Agenten-Feedback & AI</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed">Erfassung qualitativer Metriken zur KI-Qualität.</p>
-                    </div>
-
-                    <!-- 4. High Prio (Admin) -->
-                    <div class="standard-card group">
-                         <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-base text-white">Administration im Webclient</h3>
-                            <div class="flex pt-1"><span class="prio-dot"></span></div>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">Ausbau der Konfigurationsmöglichkeiten im Web.</p>
-                    </div>
-
-                    <!-- 5. High Prio (Lizenz EVAL) -->
-                    <div class="standard-card group">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-base text-white">Evaluierung: Umstellung des Lizenzmodells</h3>
-                            <div class="flex pt-1"><span class="prio-dot"></span></div>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">Strategische Evaluierung für maximale Flexibilität.</p>
-                    </div>
-
-                    <!-- 6. Normal (Telefonie MVP) -->
-                    <div class="standard-card group">
-                        <h3 class="font-bold text-base text-white mb-1">Konzept & MVP Telefonie Integration</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed">Konzeption neuer Integrationsmöglichkeiten für Telefonie.</p>
-                        <div class="dependency-arrow">
-                            <span>→</span> Basis für "Voicebot & Telephony" (Q4)
-                        </div>
-                    </div>
-
-                    <!-- 7. Normal (E-Rechnung Eval) -->
-                    <div class="standard-card group">
-                        <h3 class="font-bold text-base text-white mb-1">Evaluierung Marktanforderungen E-Rechnung</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed">Analyse der Marktanforderungen für 2025+.</p>
-                        <div class="dependency-arrow">
-                            <span>→</span> Basis für "JERA Integration" (Q3)
-                        </div>
-                    </div>
-
-                    <!-- 8. Normal (Messenger Eval) -->
-                    <div class="standard-card group">
-                        <h3 class="font-bold text-base text-white mb-1">Evaluierung Messenger Markt & JTL Strategie</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed">Marktevaluierung und Strategie-Abstimmung.</p>
-                        <div class="dependency-arrow">
-                            <span>→</span> Basis für "Messenger Gateway New Era" (Q4)
-                        </div>
-                    </div>
-
-                </div>
+            <div class="mt-3 text-xs text-gray-500 leading-tight">
+                Summe der Spalte 'MRR' aller Verträge mit Status 'Aktiv'.
             </div>
-
-            <!-- Q2 2026 -->
-            <div class="flex flex-col h-full min-h-0">
-                <div class="flex-none pb-2 border-b border-[#ab4ef0] mb-3">
-                    <h2 class="text-xl font-bold text-[#ab4ef0]">Q2 2026</h2>
-                    <span class="text-[10px] text-gray-500 uppercase tracking-widest">AI Intelligence & Insights</span>
-                </div>
-
-                <div class="overflow-y-auto p-1 space-y-3 h-full custom-scrollbar pr-2">
-
-                    <!-- 1. Main Pillar (Webclient 6) -->
-                    <div class="pillar-neon-border p-4 group hover:bg-[#1a1a1a] transition-colors">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-base text-white group-hover:text-[#f0ff00] transition-colors">GREYHOUND Webclient 6.0 Prototyp</h3>
-                            <div class="flex pt-1"><span class="prio-dot"></span></div>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">Konzeption der nächsten Client-Generation (Perspektive).</p>
-                    </div>
-
-                    <!-- 2. AI (Tiger AI) -->
-                    <div class="ai-gradient-border p-4 glow-magenta group hover:bg-[#1a1a1a] transition-colors">
-                        <h3 class="font-bold text-base text-white mb-1">Tiger AI Knowledge Database</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed">Anbindung an zentrale Wissensdatenbanken (RAG).</p>
-                    </div>
-
-                    <!-- 3. AI (Produktfragen) -->
-                    <div class="ai-gradient-border p-4 glow-cyan group hover:bg-[#1a1a1a] transition-colors">
-                        <h3 class="font-bold text-base text-white mb-1">AI-Agenten: Produktfragen beantworten</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed">Befähigung der KI, konkrete Fragen zu Lager/Varianten via API zu beantworten.</p>
-                    </div>
-
-                    <!-- 4. Normal (Dashboard) -->
-                    <div class="standard-card group">
-                        <h3 class="font-bold text-base text-white mb-1">Dashboard 1.1</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed">Erweiterung um Kostentransparenz und KI-Metriken.</p>
-                    </div>
-
-                    <!-- 5. Low Prio (GCC Branding) -->
-                    <div class="low-prio-card group">
-                        <h3 class="font-bold text-base text-gray-300 mb-1">Rebranding des GCC</h3>
-                        <p class="text-gray-500 text-xs leading-relaxed">Visuelle Anpassung an das Corporate Design.</p>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Q3 2026 -->
-            <div class="flex flex-col h-full min-h-0">
-                <div class="flex-none pb-2 border-b border-[#fb3bfb] mb-3">
-                    <h2 class="text-xl font-bold text-[#fb3bfb]">Q3 2026</h2>
-                    <span class="text-[10px] text-gray-500 uppercase tracking-widest">Connect & Scale</span>
-                </div>
-
-                <div class="overflow-y-auto p-1 space-y-3 h-full custom-scrollbar pr-2">
-
-                    <!-- 1. High Prio (Shipping) -->
-                    <div class="standard-card group">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-base text-white group-hover:text-[#00ffc0] transition-colors">JTL-Shipping, Tracking & Externe Dienste</h3>
-                            <div class="flex pt-1"><span class="prio-dot"></span></div>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">Inquiry Prevention durch proaktive Tracking-Infos.</p>
-                    </div>
-
-                    <!-- 2. Normal (Formular) -->
-                    <div class="standard-card group">
-                        <h3 class="font-bold text-base text-white mb-1">Formularfunktionen 1.0</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed">Vorlagen für strukturierte Prozesse (eingeordnet bei DMS/JERA).</p>
-                    </div>
-
-                    <!-- 3. Normal (eBay) -->
-                    <div class="standard-card group">
-                        <h3 class="font-bold text-base text-white mb-1">eBay Connect Addon 2.0</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed">Modernisierung der Schnittstelle.</p>
-                    </div>
-
-                    <!-- 4. Normal (JERA) -->
-                    <div class="standard-card group">
-                        <h3 class="font-bold text-base text-white mb-1">JERA Integration</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed">Technischer Part E-Rechnungs-Validierung & DATEV.</p>
-                    </div>
-
-                    <!-- 5. Low Prio (GCC Payment) -->
-                    <div class="low-prio-card group">
-                        <h3 class="font-bold text-base text-gray-300 mb-1">GCC Integration von PayPal und Kreditkarte</h3>
-                        <p class="text-gray-500 text-xs leading-relaxed">Nice-to-have.</p>
-                    </div>
-
-                    <!-- 6. Low Prio (GCC Salesforce) -->
-                    <div class="low-prio-card group">
-                        <h3 class="font-bold text-base text-gray-300 mb-1">GCC Transformation nach Salesforce</h3>
-                        <p class="text-gray-500 text-xs leading-relaxed">Vorbereitung System-Integration.</p>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Q4 2026 -->
-            <div class="flex flex-col h-full min-h-0">
-                <div class="flex-none pb-2 border-b border-gray-700 mb-3">
-                    <h2 class="text-xl font-bold text-white">Q4 2026</h2>
-                    <span class="text-[10px] text-gray-500 uppercase tracking-widest">Next Era</span>
-                </div>
-
-                <div class="overflow-y-auto p-1 space-y-3 h-full custom-scrollbar pr-2">
-
-                    <!-- 1. AI (Voicebot) -->
-                    <div class="ai-gradient-border p-4 glow-magenta group hover:bg-[#1a1a1a] transition-colors">
-                        <h3 class="font-bold text-base text-white mb-1">Voicebot & Telephony Integration</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed">Full Feature Umsetzung (nach MVP in Q1).</p>
-                    </div>
-
-                    <!-- 2. High Prio (Addon) -->
-                    <div class="standard-card group">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-base text-white">Addon Manager New Era</h3>
-                            <div class="flex pt-1"><span class="prio-dot"></span></div>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">Modernisierung der Infrastruktur.</p>
-                    </div>
-
-                    <!-- 3. High Prio (Messenger) -->
-                    <div class="standard-card group">
-                        <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-base text-white">Messenger Gateway New Era</h3>
-                            <div class="flex pt-1"><span class="prio-dot"></span></div>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed">Modernisierung der Core-Technologie.</p>
-                    </div>
-
-                    <!-- 4. Normal (Hosting) -->
-                    <div class="standard-card group">
-                        <h3 class="font-bold text-base text-white mb-1">Hosting Modernisierung – Ablösung Wine & Migration zu Linux/Docker</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed">Modernisierung der Server-Architektur (Linux/Docker).</p>
-                    </div>
-
-                    <!-- 5. Normal (Mobile) -->
-                    <div class="standard-card group">
-                        <h3 class="font-bold text-base text-white mb-1">Mobile Clients (iOS & Android)</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed">Facelift & Strategische Neuausrichtung.</p>
-                    </div>
-
-                    <!-- 6. Normal (Connectors) -->
-                    <div class="standard-card group">
-                        <h3 class="font-bold text-base text-white mb-1">Marktplatz Connectors</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed">Neue Konnektoren Amazon, OTTO, Kaufland, Mirakl.</p>
-                    </div>
-
-                    <!-- 7. Low Prio (Word) -->
-                    <div class="low-prio-card group">
-                        <h3 class="font-bold text-base text-gray-300 mb-1">Word Addon</h3>
-                        <p class="text-gray-500 text-xs leading-relaxed">Modernisierung der Office-Integration.</p>
-                    </div>
-
-                </div>
-            </div>
-
         </div>
-    </main>
+        
+        <div class="signature-border ambient-glow p-5 flex flex-col justify-between relative group">
+            <button onclick="openInfoModal('mrrClean')" class="absolute top-4 right-4 text-gray-500 hover:text-ghCyan transition-colors focus:outline-none z-10" title="Details anzeigen">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </button>
+            <div class="pr-6">
+                <h3 class="text-gray-400 text-sm font-medium mb-1">Bereinigter KI MRR</h3>
+                <div class="text-3xl font-bold text-white" id="kpi-mrr-clean">0 €</div>
+            </div>
+            <div class="mt-3 text-xs text-gray-500 leading-tight">
+                Garantierter MRR: Ohne laufende Testphasen und abzüglich bereits bekannter künftiger Kündigungen.
+            </div>
+        </div>
+
+        <div class="signature-border ambient-glow p-5 flex flex-col justify-between relative group">
+            <button onclick="openInfoModal('bookings')" class="absolute top-4 right-4 text-gray-500 hover:text-ghCyan transition-colors focus:outline-none z-10" title="Details anzeigen">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </button>
+            <div class="pr-6">
+                <h3 class="text-gray-400 text-sm font-medium mb-1">Verträge mit KI-Buchung</h3>
+                <div class="text-3xl font-bold text-white" id="kpi-bookings">0</div>
+            </div>
+            <div class="mt-3 text-xs text-gray-500 leading-tight">
+                Anzahl aller KI-Verträge mit Status 'Aktiv'. <span id="kpi-bookings-sub" class="text-ghCyan font-medium"></span>
+            </div>
+        </div>
+
+        <div class="signature-border ambient-glow p-5 flex flex-col justify-between relative group">
+            <button onclick="openInfoModal('culs')" class="absolute top-4 right-4 text-gray-500 hover:text-ghCyan transition-colors focus:outline-none z-10" title="Details anzeigen">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </button>
+            <div class="pr-6">
+                <h3 class="text-gray-400 text-sm font-medium mb-1">KI-gestützte Lizenzen (CULs)</h3>
+                <div class="text-3xl font-bold text-white" id="kpi-culs">0</div>
+            </div>
+            <div class="mt-3 text-xs text-gray-500 leading-tight">
+                Summe der Spalte 'CULs' (Concurrent User Licenses) aller aktiven Verträge. Zeigt die theoretische Nutzerreichweite.
+            </div>
+        </div>
+
+        <div class="signature-border ambient-glow p-5 flex flex-col justify-between relative group">
+            <button onclick="openInfoModal('adoption')" class="absolute top-4 right-4 text-gray-500 hover:text-ghCyan transition-colors focus:outline-none z-10" title="Details anzeigen">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </button>
+            <div class="pr-6">
+                <h3 class="text-gray-400 text-sm font-medium mb-1">Adoption (Upsell vs. Neu)</h3>
+                <div class="text-3xl font-bold text-white" id="kpi-upsell">0% / 0%</div>
+            </div>
+            <div class="mt-3 text-xs text-gray-500 leading-tight">
+                <span class="text-gray-400 font-medium">Upsell:</span> KI-Buchung >30 Tage nach Basis-Vertrag.<br>
+                <span class="text-gray-400 font-medium">Neu:</span> KI direkt bei Start mitgebucht (&lt;30 Tage).
+            </div>
+        </div>
+
+        <div class="signature-border ambient-glow p-5 flex flex-col justify-between relative group">
+            <button onclick="openInfoModal('churn')" class="absolute top-4 right-4 text-gray-500 hover:text-ghCyan transition-colors focus:outline-none z-10" title="Details anzeigen">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </button>
+            <div class="pr-6">
+                <h3 class="text-gray-400 text-sm font-medium mb-1">KI Churn (Paid)</h3>
+                <div class="text-3xl font-bold text-white" id="kpi-churn">0 €</div>
+            </div>
+            <div class="mt-3 text-xs text-gray-500 leading-tight">
+                Verlorener MRR durch gekündigte Verträge nach kostenpflichtiger Nutzung. <span id="kpi-churn-sub" class="text-ghRed font-medium"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        
+        <!-- Weekly Trend Chart -->
+        <div class="signature-border p-6 relative lg:col-span-2 group">
+            <button onclick="openInfoModal('weeklyTrend')" class="absolute top-4 right-4 text-gray-500 hover:text-ghCyan transition-colors focus:outline-none z-10" title="Details anzeigen">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </button>
+            <div class="flex justify-between items-start mb-4 pr-8">
+                <div>
+                    <h3 class="text-lg font-bold">Wöchentliches Wachstum (Netto MRR Trend)</h3>
+                    <p class="text-xs text-gray-400 mt-1 max-w-md">Zeigt die reale Netto-Entwicklung: Neue KI-Buchungen vs. Kündigungen und den daraus resultierenden Gesamt-MRR pro Kalenderwoche.</p>
+                </div>
+                <span class="text-xs bg-gray-800 text-gray-300 py-1 px-2 rounded shrink-0 hidden sm:inline-block">Historische Entwicklung</span>
+            </div>
+            <!-- Höhe deutlich vergrößert für weniger Stauchung -->
+            <div class="h-[400px] relative w-full mt-2">
+                <canvas id="weeklyChart"></canvas>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-6 lg:col-span-1">
+            <!-- Chart 1: Product Distribution -->
+            <div class="signature-border p-6 relative flex-1 group">
+                <button onclick="openInfoModal('productDist')" class="absolute top-4 right-4 text-gray-500 hover:text-ghCyan transition-colors focus:outline-none z-10" title="Details anzeigen">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </button>
+                <h3 class="text-md font-bold mb-2 pr-6">Produkt-Verteilung</h3>
+                <div class="h-32 relative w-full flex justify-center">
+                    <canvas id="productChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Chart 2: Test vs Active -->
+            <div class="signature-border p-6 relative flex-1 group">
+                <button onclick="openInfoModal('statusDist')" class="absolute top-4 right-4 text-gray-500 hover:text-ghCyan transition-colors focus:outline-none z-10" title="Details anzeigen">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </button>
+                <h3 class="text-md font-bold mb-2 pr-6">Vertrags-Status</h3>
+                <div class="h-32 relative w-full flex justify-center">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEU: Sales Performance Sektion -->
+    <h2 class="text-xl font-bold mb-6 mt-12 border-b border-gray-800 pb-3 text-white">Sales Performance <span class="text-gray-500 font-normal text-lg">(Monatliche Kohorten)</span></h2>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+        <!-- Monthly Chart 1: Type -->
+        <div class="signature-border p-6 relative group">
+            <button onclick="openInfoModal('monthlyType')" class="absolute top-4 right-4 text-gray-500 hover:text-ghCyan transition-colors focus:outline-none z-10" title="Details anzeigen">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </button>
+            <h3 class="text-md font-bold mb-1 pr-6">MRR nach Kundentyp</h3>
+            <p class="text-xs text-gray-400 mb-4">Umsatzverteilung (New Logo vs. Upsell) pro Buchungsmonat.</p>
+            <div class="h-64 relative w-full flex justify-center">
+                <canvas id="monthlyTypeChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Monthly Chart 2: Product -->
+        <div class="signature-border p-6 relative group">
+            <button onclick="openInfoModal('monthlyProduct')" class="absolute top-4 right-4 text-gray-500 hover:text-ghCyan transition-colors focus:outline-none z-10" title="Details anzeigen">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </button>
+            <h3 class="text-md font-bold mb-1 pr-6">MRR nach KI-Produkt</h3>
+            <p class="text-xs text-gray-400 mb-4">Umsatzverteilung (AI Pack vs. Human Assist) pro Buchungsmonat.</p>
+            <div class="h-64 relative w-full flex justify-center">
+                <canvas id="monthlyProductChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fußnote (0€ Verträge & Datenquelle) -->
+    <footer class="mt-8 mb-4 border-t border-gray-800 pt-6 flex flex-col items-center gap-3 text-sm text-gray-500">
+        <div class="text-center">
+            <span class="text-ghCyan font-bold mr-1">*</span> 
+            Hinweis zur Datenbasis: Partner- und interne Testverträge (erkennbar am <span class="text-white font-medium">0,00 € MRR</span> oder am <span class="text-white font-medium">Firmennamen</span>) werden vom Dashboard automatisch herausgefiltert und in <u>keiner</u> der dargestellten Metriken berücksichtigt.
+        </div>
+        <a href="https://greyhound-software.com/gcc/statements/statements_id=250" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-gray-400 hover:text-ghCyan transition-colors bg-[#111111] border border-gray-800 px-4 py-2 rounded-lg mt-1" title="GCC öffnen">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            Aktuelle CSV-Datenbank aus dem GCC exportieren (Abfrage #250)
+        </a>
+    </footer>
+
+    <!-- Info Modal (Floating & Draggable) -->
+    <div id="infoModal" class="fixed z-[100] hidden signature-border w-full max-w-md shadow-[0_20px_50px_rgba(0,0,0,0.8)]" style="top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 1px;">
+        <div class="bg-ghSurface rounded-[15px] overflow-hidden flex flex-col h-full w-full relative z-10">
+            <!-- Header / Drag Handle (komplett getrennt vom Close Button) -->
+            <div class="flex justify-between items-center border-b border-gray-800 bg-[#1a1a1a]">
+                <div id="modalHeader" class="flex-1 flex items-center gap-3 p-4 cursor-move" title="Zum Verschieben klicken und ziehen">
+                    <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 24 24"><path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM16 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM16 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM16 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/></svg>
+                    <h2 id="modalTitle" class="text-lg font-bold text-white text-gradient pointer-events-none">KPI Titel</h2>
+                </div>
+                <div class="p-3">
+                    <button type="button" onclick="closeInfoModal()" class="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-800 focus:outline-none transition-colors cursor-pointer" title="Schließen">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="modalContent" class="p-6 text-gray-300 text-sm leading-relaxed space-y-3">
+                <!-- Text wird per JS eingefügt -->
+            </div>
+            
+            <div class="px-6 py-5 text-right border-t border-gray-800 bg-[#111111]">
+                <button type="button" onclick="closeInfoModal()" class="btn-primary px-6 py-2 text-sm cursor-pointer relative z-10">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEU: Contracts Data Modal (Floating & Draggable) -->
+    <div id="contractsModal" class="fixed z-[100] hidden signature-border w-full max-w-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)]" style="top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 1px;">
+        <div class="bg-ghSurface rounded-[15px] overflow-hidden flex flex-col h-full w-full relative z-10">
+            <!-- Header / Drag Handle -->
+            <div class="flex justify-between items-center border-b border-gray-800 bg-[#1a1a1a]">
+                <div id="contractsModalHeader" class="flex-1 flex items-center gap-3 p-4 cursor-move" title="Zum Verschieben klicken und ziehen">
+                    <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 24 24"><path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM16 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM16 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM16 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/></svg>
+                    <h2 id="contractsModalTitle" class="text-lg font-bold text-white text-gradient pointer-events-none">Vertragsdetails</h2>
+                </div>
+                <div class="p-3">
+                    <button type="button" onclick="closeContractsModal()" class="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-800 focus:outline-none transition-colors cursor-pointer" title="Schließen">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-0 text-sm max-h-[60vh] overflow-y-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-[#111111] sticky top-0 z-10 border-b border-gray-800 text-gray-400 text-xs uppercase tracking-wider">
+                        <tr>
+                            <th class="px-4 py-3 font-medium">Firma</th>
+                            <th class="px-4 py-3 font-medium">Vertragsnummer</th>
+                            <th class="px-4 py-3 font-medium text-right">MRR</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contractsModalBody" class="text-gray-300">
+                        <!-- Dynamischer Tabelleninhalt -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="px-6 py-4 text-right border-t border-gray-800 bg-[#111111]">
+                <button type="button" onclick="closeContractsModal()" class="btn-primary px-6 py-2 text-sm cursor-pointer relative z-10">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Logic -->
+    <script>
+        // Modal Texte Definitionen
+        const kpiExplanations = {
+            'mrr': {
+                title: 'Total KI MRR (Aktiv)',
+                text: '<p>Dies ist die <strong>Summe der monatlich wiederkehrenden Umsätze (MRR)</strong> aller aktiven KI-Verträge aus dem hochgeladenen Datenexport.</p><p><strong>Besonderheit:</strong> Partner- und Testverträge (erkennbar am Wert 0,00 € in der MRR-Spalte oder an unserem eigenen Firmennamen) werden von der gesamten Dashboard-Logik automatisch herausgefiltert. Diese Kachel zeigt dir somit ein absolut klares und bereinigtes Bild des echten, zahlungsrelevanten Umsatzes, den die KI-Produkte generieren.</p>'
+            },
+            'mrrClean': {
+                title: 'Bereinigter KI MRR',
+                text: '<p>Dies ist der <strong>garantierte und feste Umsatz</strong>.</p><p>Er nimmt den regulären aktiven MRR und zieht zwei Risiko-Faktoren ab:</p><ul class="list-disc pl-4 mt-2 space-y-1"><li><strong>Laufende Testphasen:</strong> Umsatz aus Verträgen, die noch in Evaluierung sind.</li><li><strong>Pending Churn:</strong> Umsatz aus aktiven Verträgen, bei denen in der Zukunft bereits ein Kündigungsdatum eingetragen ist.</li></ul><p>Diese Zahl ist dein "sicherer Hafen" für die solide finanzielle Planung.</p>'
+            },
+            'bookings': {
+                title: 'Verträge mit KI-Buchung',
+                text: '<p>Diese Kachel zeigt die <strong>absolute Anzahl aller aktiven Kundenverträge</strong>, in denen aktuell ein kostenpflichtiges KI-Produkt (AI Pack oder AI Human Assist) gebucht ist.</p><p>Der Wert in Klammern gibt dir direkt Auskunft darüber, wie viele dieser aktiven Verträge sich derzeit noch in der hinterlegten <strong>Testphase (Evaluierung)</strong> befinden.</p><p><em>Tipp:</em> Genauso wie beim Umsatz sind hier interne Testaccounts und Partner (0€ MRR oder eigener Firmenname) von der Zählung ausgeschlossen.</p>'
+            },
+            'culs': {
+                title: 'KI-gestützte Lizenzen (CULs)',
+                text: '<p>Hier wird die <strong>Anzahl der gebuchten Nutzerlizenzen (Concurrent User Licenses)</strong> summiert – bezogen auf alle Verträge, die ein KI-Produkt aktiv haben.</p><p><strong>Warum diese Zahl wichtig ist:</strong> Sie gibt Aufschluss über die theoretische Reichweite unserer KI-Features. Sie beantwortet im SteerCo die Frage: <em>"Wie viele Mitarbeiter bei unseren Kunden arbeiten potenziell täglich mit unseren KI-Assistenzfunktionen?"</em></p>'
+            },
+            'adoption': {
+                title: 'Adoption (Upsell vs. Neu)',
+                text: '<p>Diese Metrik beantwortet die strategische Frage: <em>An wen verkaufen wir die KI eigentlich primär?</em> Die Buchungen werden hierfür in zwei Prozentwerte aufgeteilt:</p><ul class="list-disc pl-4 mt-2 space-y-1"><li><strong>Upsell (Bestandskunden):</strong> Kunden, die GREYHOUND bereits seit längerem nutzen und die KI nachträglich hinzugebucht haben. (Logik: Die KI-Buchung fand mehr als 30 Tage nach Vertragsbeginn statt).</li><li><strong>Neu (Neukunden):</strong> Kunden, die GREYHOUND einführen und die KI direkt beim Start mitbuchen. (Logik: Die Differenz zwischen Vertragsbeginn und KI-Buchung beträgt maximal 30 Tage).</li></ul><div class="mt-3 p-3 bg-[#1a1a1a] border border-gray-700 rounded text-xs text-gray-400"><em><strong>Hinweis zur Datenbasis:</strong> Da Testzeiträume historisch variieren und in der aktuellen Abfrage das exakte Startdatum des kommerziellen Basisvertrags fehlt, lässt die aktuelle Datenbasis noch keinen 100%igen Rückschluss zu. Die 30-Tage-Grenze dient daher vorerst als bestmögliche Näherung.</em></div>'
+            },
+            'churn': {
+                title: 'KI Churn (Paid)',
+                text: '<p>Ein klassischer Indikator für <strong>verlorenen Umsatz durch abspringende Kunden (echter Churn)</strong>.</p><p>Diese Zahl summiert den MRR aller Verträge, bei denen eine Kündigung hinterlegt ist <strong>UND</strong> diese Kündigung nachweißlich <em>nach</em> Ablauf einer eventuellen Testphase stattfand (oder es gar keine Testphase gab).</p><p><strong>Bedeutung:</strong> Im Gegensatz zu reinen Testabbrechern repräsentiert dieser Wert den harten finanziellen Verlust von Kunden, die das Produkt bereits kostenpflichtig genutzt haben. (Hinweis: Schließt auch Pending Churn ein, also Kündigungen, die erst in der Zukunft wirksam werden).</p>'
+            },
+            'weeklyTrend': {
+                title: 'Wöchentliches Wachstum (Netto MRR Trend)',
+                text: '<p>Dieses Diagramm zeigt die <strong>echte Netto-Entwicklung (Net MRR)</strong> der KI-Adoption über die Zeit, inklusive aller Kündigungen (Churn).</p><ul class="list-disc pl-4 mt-2 space-y-1"><li><strong>Balken nach oben (Violett):</strong> Anzahl der neu hinzugekommenen KI-Verträge in der jeweiligen Kalenderwoche.</li><li><strong>Balken nach unten (Rot):</strong> Anzahl der beendeten Verträge/Testphasen (Churn) in der jeweiligen Kalenderwoche.</li><li><strong>Linie (Cyan):</strong> Stellt den kumulierten <em>Netto</em>-KI-Umsatz (MRR) dar. (Neuer MRR minus wegfallender MRR).</li></ul><p><em>Im Gegensatz zu den KPI-Kacheln (die nur den heutigen Ist-Zustand zeigen), werden hier auch bereits "Geschlossene" Verträge historisch korrekt berücksichtigt, um den wahren Geschäftsverlauf abzubilden.</em></p>'
+            },
+            'productDist': {
+                title: 'Produkt-Verteilung',
+                text: '<p>Veranschaulicht den <strong>Share of Wallet</strong> innerhalb unseres KI-Portfolios.</p><p>Es zeigt das Verhältnis aller aktuell <em>aktiven</em> Verträge, aufgeteilt auf unsere beiden Hauptprodukte: <strong>AI Pack</strong> und <strong>AI Human Assist</strong>.</p><p>Das hilft uns im SteerCo schnell zu bewerten, welches der beiden Produkte derzeit stärker nachgefragt wird.</p>'
+            },
+            'statusDist': {
+                title: 'Vertrags-Status',
+                text: '<p>Gibt Aufschluss über die <strong>Verbindlichkeit</strong> der aktiven KI-Buchungen.</p><ul class="list-disc pl-4 mt-2 space-y-1"><li><strong>Feste Buchung:</strong> Kunden, die das Produkt regulär bezahlen (oder bei denen die Testphase beendet ist).</li><li><strong>Testphase:</strong> Kunden, die sich aktuell noch in einer vertraglich hinterlegten Evaluierungsphase befinden.</li></ul><p>Ein hoher Test-Anteil bedeutet hohes zukünftiges Umsatzpotenzial, erfordert aber aktuell noch engen Begleitschutz durch den Vertrieb oder Customer Success.</p>'
+            },
+            'monthlyType': {
+                title: 'MRR nach Kundentyp (Monatlich)',
+                text: '<p>Diese Auswertung ist primär für die <strong>Sales-Steuerung</strong> relevant.</p><p>Sie fasst alle neu gebuchten KI-Produkte (basierend auf dem Buchungsdatum) im jeweiligen Kalendermonat zusammen und teilt den daraus resultierenden MRR auf:</p><ul class="list-disc pl-4 mt-2 space-y-1"><li><strong>New Logo (Gelb):</strong> KI direkt beim Start mitgebucht (&lt;30 Tage nach Basis-Vertrag).</li><li><strong>Upsell (Magenta):</strong> KI-Buchung durch bestehende Kunden (>30 Tage).</li></ul><p><em>Hover-Tipp: Wenn du mit der Maus über die Balken fährst, siehst du neben dem exakten Euro-Wert auch die absolute Anzahl der abgeschlossenen Verträge in diesem Monat.</em></p>'
+            },
+            'monthlyProduct': {
+                title: 'MRR nach KI-Produkt (Monatlich)',
+                text: '<p>Dieses Diagramm bricht den generierten Umsatz pro Monat auf die <strong>einzelnen Produkte</strong> herunter.</p><ul class="list-disc pl-4 mt-2 space-y-1"><li><strong>AI Pack (Cyan)</strong></li><li><strong>AI Human Assist (Violett)</strong></li></ul><p>Das hilft dem Produkt- und Marketingteam zu verstehen, welches Feature in welchem Zeitraum die stärkere Zugkraft (Traction) im Vertrieb entwickelt hat.</p><p><em>Hover-Tipp: Wenn du mit der Maus über die Balken fährst, siehst du neben dem exakten Euro-Wert auch die absolute Anzahl der abgeschlossenen Verträge in diesem Monat.</em></p>'
+            }
+        };
+
+        // Modal Steuerung & Dragging Logic
+        const modal = document.getElementById('infoModal');
+        const modalHeader = document.getElementById('modalHeader');
+
+        window.openInfoModal = function(kpiKey) {
+            const data = kpiExplanations[kpiKey];
+            if (data) {
+                document.getElementById('modalTitle').innerHTML = data.title;
+                document.getElementById('modalContent').innerHTML = data.text;
+                modal.classList.remove('hidden');
+            }
+        };
+
+        window.closeInfoModal = function() {
+            modal.classList.add('hidden');
+        };
+
+        // Modal Steuerung für Contracts Modal
+        const contractsModal = document.getElementById('contractsModal');
+        const contractsModalHeader = document.getElementById('contractsModalHeader');
+
+        window.showContractsModal = function(title, contracts) {
+            document.getElementById('contractsModalTitle').innerText = title;
+            const tbody = document.getElementById('contractsModalBody');
+            tbody.innerHTML = '';
+            
+            // Absteigend nach MRR sortieren
+            contracts.sort((a, b) => b.mrr - a.mrr);
+
+            let totalMrr = 0;
+
+            if (contracts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" class="px-4 py-4 text-center text-gray-500">Keine Verträge in diesem Segment.</td></tr>';
+            } else {
+                contracts.forEach(c => {
+                    totalMrr += c.mrr;
+                    const mrrFormatted = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(c.mrr);
+                    const companyName = c.firma ? c.firma : '<span class="italic text-gray-600">Unbekannt</span>';
+                    tbody.innerHTML += `
+                        <tr class="border-b border-gray-800 hover:bg-[#1a1a1a] transition-colors">
+                            <td class="px-4 py-3 text-white font-medium">${companyName}</td>
+                            <td class="px-4 py-3 text-gray-400 font-mono text-xs">${c.nummer}</td>
+                            <td class="px-4 py-3 text-right text-ghCyan">${mrrFormatted}</td>
+                        </tr>
+                    `;
+                });
+                
+                // Summenzeile anfügen
+                const totalFormatted = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(totalMrr);
+                tbody.innerHTML += `
+                    <tr class="bg-[#111111] font-bold">
+                        <td colspan="2" class="px-4 py-3 text-right text-gray-400">Summe:</td>
+                        <td class="px-4 py-3 text-right text-ghCyan border-t border-gray-700">${totalFormatted}</td>
+                    </tr>
+                `;
+            }
+
+            contractsModal.classList.remove('hidden');
+        };
+
+        window.closeContractsModal = function() {
+            contractsModal.classList.add('hidden');
+        };
+
+        // Drag & Drop State (für beide Modals)
+        let isDragging = false;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+        let activeModal = null;
+
+        // Allgemeine Mousedown Funktion für Header
+        function initDrag(e, modalElement) {
+            isDragging = true;
+            activeModal = modalElement;
+            document.body.style.userSelect = 'none';
+
+            const rect = activeModal.getBoundingClientRect();
+            dragOffsetX = e.clientX - rect.left;
+            dragOffsetY = e.clientY - rect.top;
+
+            activeModal.style.transform = 'none';
+            activeModal.style.left = rect.left + 'px';
+            activeModal.style.top = rect.top + 'px';
+        }
+
+        // Mousedown Event Listener für beide Header
+        modalHeader.addEventListener('mousedown', function(e) {
+            initDrag(e, modal);
+        });
+        contractsModalHeader.addEventListener('mousedown', function(e) {
+            initDrag(e, contractsModal);
+        });
+
+        // Mousemove über das gesamte Dokument fangen
+        document.addEventListener('mousemove', function(e) {
+            if (!isDragging || !activeModal) return;
+            
+            activeModal.style.left = (e.clientX - dragOffsetX) + 'px';
+            activeModal.style.top = (e.clientY - dragOffsetY) + 'px';
+        });
+
+        // Mouseup beendet den Vorgang
+        document.addEventListener('mouseup', function() {
+            if (isDragging) {
+                isDragging = false;
+                activeModal = null;
+                document.body.style.userSelect = '';
+            }
+        });
+
+        // --- Ende Modal Logik ---
+
+        // Chart Instances
+        let productChartInstance = null;
+        let statusChartInstance = null;
+        let weeklyChartInstance = null;
+        let monthlyTypeChartInstance = null;
+        let monthlyProductChartInstance = null;
+
+        // Hilfsfunktion: MRR als Float parsen
+        function parseMRR(mrrString) {
+            if (!mrrString) return 0;
+            const cleaned = mrrString.replace(' €', '').replace(/\./g, '').replace(',', '.');
+            return parseFloat(cleaned) || 0;
+        }
+
+        // Hilfsfunktion: Datum parsen (DD.MM.YYYY -> Date)
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            const parts = dateStr.split('.');
+            if (parts.length === 3) {
+                return new Date(parts[2], parts[1] - 1, parts[0]);
+            }
+            return null;
+        }
+
+        // Hilfsfunktion: Finde den Montag einer Woche für das Grouping
+        function getMonday(d) {
+            const date = new Date(d);
+            const day = date.getDay();
+            const diff = date.getDate() - day + (day === 0 ? -6 : 1); // Anpassen falls Sonntag (0)
+            const monday = new Date(date.setDate(diff));
+            monday.setHours(0,0,0,0);
+            return monday;
+        }
+
+        // Hilfsfunktion: KW String generieren (KW X/YYYY)
+        function getWeekString(d) {
+            const date = new Date(d.getTime());
+            date.setHours(0, 0, 0, 0);
+            date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+            const week1 = new Date(date.getFullYear(), 0, 4);
+            const weekNumber = 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+            const year = date.getFullYear().toString().slice(-2);
+            return `KW ${weekNumber}/${year}`;
+        }
+
+        // Hilfsfunktion: Monat String generieren (z.B. Jan 2026)
+        function getMonthString(d) {
+            return d.toLocaleDateString('de-DE', { month: 'short', year: 'numeric' });
+        }
+
+        // CSV Verarbeiten und UI updaten
+        function processData(data, fileTimestamp = null) {
+            let totalMRR = 0;
+            let cleanMRR = 0;
+            let activeBookings = 0;
+            let evalBookings = 0;
+            let totalCULs = 0;
+            
+            let aiPackCount = 0;
+            let aiHumanCount = 0;
+
+            let newKundeCount = 0;
+            let upsellCount = 0;
+            
+            let paidChurnCount = 0;
+            let paidChurnMrr = 0;
+
+            // Für das wöchentliche Historien-Chart (Netto MRR)
+            const weeklyDataMap = new Map();
+            
+            // Für die monatlichen Sales-Charts (Neuabschlüsse)
+            const monthlyDataMap = new Map();
+
+            // Hilfsfunktion zur Initialisierung einer Woche
+            function initWeek(timestamp, dateObj) {
+                if (!weeklyDataMap.has(timestamp)) {
+                    weeklyDataMap.set(timestamp, { newCount: 0, newMrr: 0, churnCount: 0, churnMrr: 0, date: dateObj });
+                }
+            }
+
+            // Sicherstellen, dass die Kalenderwoche des Datei-Uploads auf der X-Achse existiert
+            const dataDate = fileTimestamp ? new Date(fileTimestamp) : new Date();
+            const dataMonday = getMonday(dataDate);
+            initWeek(dataMonday.getTime(), dataMonday);
+            const currentWeekStr = getWeekString(dataDate);
+
+            data.forEach(row => {
+                if (!row.Vertragsnummer) return; 
+
+                const mrr = parseMRR(row.MRR);
+                const isInternalCompany = row.Firma && row.Firma.includes('GREYHOUND Software');
+                
+                // NEU: Partner- und Testverträge konsequent aus ALLEN Metriken herausfiltern (0 € MRR oder internes System)
+                if (mrr === 0 || isInternalCompany) return; 
+
+                // --- 1. WÖCHENTLICHER TREND (Wertung ALLER Zeilen, auch geschlossene) ---
+                
+                // Buchungen (Plus)
+                const gebucht = parseDate(row.Produkt_gebucht_am);
+                if (gebucht) {
+                    const ts = getMonday(gebucht).getTime();
+                    initWeek(ts, getMonday(gebucht));
+                    weeklyDataMap.get(ts).newCount += 1;
+                    weeklyDataMap.get(ts).newMrr += mrr;
+                    
+                    // NEU: Monatliche Aggregation für Sales (nur Buchungen)
+                    const monthKey = gebucht.getFullYear() + '-' + String(gebucht.getMonth() + 1).padStart(2, '0');
+                    if (!monthlyDataMap.has(monthKey)) {
+                        monthlyDataMap.set(monthKey, {
+                            date: new Date(gebucht.getFullYear(), gebucht.getMonth(), 1),
+                            newMrr: 0, newCount: 0, newContracts: [],
+                            upsellMrr: 0, upsellCount: 0, upsellContracts: [],
+                            packMrr: 0, packCount: 0, packContracts: [],
+                            humanMrr: 0, humanCount: 0, humanContracts: []
+                        });
+                    }
+                    
+                    const monthData = monthlyDataMap.get(monthKey);
+                    const erstellt = parseDate(row.Vertrag_erstellt_am);
+                    
+                    // Vertrags-Objekt für die Listen-Darstellung speichern
+                    const contractDetail = { 
+                        nummer: row.Vertragsnummer, 
+                        firma: row.Firma, 
+                        mrr: mrr 
+                    };
+                    
+                    // Split 1: New Logo vs Upsell
+                    if (erstellt) {
+                        const diffDays = (gebucht - erstellt) / (1000 * 60 * 60 * 24);
+                        if (diffDays <= 30) {
+                            monthData.newMrr += mrr;
+                            monthData.newCount += 1;
+                            monthData.newContracts.push(contractDetail);
+                        } else {
+                            monthData.upsellMrr += mrr;
+                            monthData.upsellCount += 1;
+                            monthData.upsellContracts.push(contractDetail);
+                        }
+                    }
+                    
+                    // Split 2: Produkt
+                    if (row.Produktname === 'AI Pack') {
+                        monthData.packMrr += mrr;
+                        monthData.packCount += 1;
+                        monthData.packContracts.push(contractDetail);
+                    } else if (row.Produktname === 'AI Human Assist') {
+                        monthData.humanMrr += mrr;
+                        monthData.humanCount += 1;
+                        monthData.humanContracts.push(contractDetail);
+                    }
+                }
+
+                // Kündigungen / Churn (Minus)
+                // Nutze primär Produkt-Kündigung, ansonsten Vertrags-Kündigung als Fallback
+                let gekuendigt = parseDate(row.Produkt_gekündigt_zum);
+                if (!gekuendigt && row.Vertrag_gekuendigt_zum) {
+                    gekuendigt = parseDate(row.Vertrag_gekuendigt_zum);
+                }
+                
+                if (gekuendigt) {
+                    const ts = getMonday(gekuendigt).getTime();
+                    initWeek(ts, getMonday(gekuendigt));
+                    weeklyDataMap.get(ts).churnCount += 1;
+                    weeklyDataMap.get(ts).churnMrr += mrr;
+                }
+
+                // Paid Churn Logik: Kunde hat gekündigt UND (hatte keinen Test ODER Kündigung liegt NACH dem Testende)
+                let cancelDateObj = parseDate(row.Produkt_gekündigt_zum) || parseDate(row.Vertrag_gekuendigt_zum);
+                let testEndDateObj = parseDate(row.Produkttest_bis);
+
+                if (cancelDateObj) {
+                    // Wenn es kein Testende gibt ODER das Kündigungsdatum nach dem Testende liegt -> Paid Churn
+                    if (!testEndDateObj || cancelDateObj > testEndDateObj) {
+                        paidChurnCount++;
+                        paidChurnMrr += mrr;
+                    }
+                }
+
+                // --- 2. SNAPSHOT KPIs (Nur aktuell "Aktiv") ---
+                if (row.Status !== 'Aktiv') return; 
+
+                const culs = parseInt(row.CULs) || 0;
+                
+                totalMRR += mrr;
+                activeBookings++;
+                totalCULs += culs;
+
+                const isTesting = row.Produkttest_bis !== "";
+                const isCancelling = row.Produkt_gekündigt_zum !== "" || row.Vertrag_gekuendigt_zum !== "";
+
+                // Bereinigter MRR: Zählt nur feste Verträge ohne Test und ohne hinterlegte Kündigung
+                if (!isTesting && !isCancelling) {
+                    cleanMRR += mrr;
+                }
+
+                if (isTesting) evalBookings++;
+                if (row.Produktname === 'AI Pack') aiPackCount++;
+                if (row.Produktname === 'AI Human Assist') aiHumanCount++;
+
+                const erstellt = parseDate(row.Vertrag_erstellt_am);
+                if (gebucht && erstellt) {
+                    const diffDays = (gebucht - erstellt) / (1000 * 60 * 60 * 24);
+                    if (diffDays > 30) upsellCount++;
+                    else newKundeCount++;
+                }
+            });
+
+            // UI Updaten: KPI Cards
+            document.getElementById('kpi-mrr').innerText = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(totalMRR);
+            document.getElementById('kpi-mrr-clean').innerText = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(cleanMRR);
+            document.getElementById('kpi-bookings').innerText = activeBookings;
+            document.getElementById('kpi-bookings-sub').innerText = `(Davon ${evalBookings} aktuell in Testphase)`;
+            document.getElementById('kpi-culs').innerText = totalCULs;
+            
+            const totalAdoption = newKundeCount + upsellCount;
+            const upsellPerc = totalAdoption > 0 ? Math.round((upsellCount / totalAdoption) * 100) : 0;
+            const newPerc = totalAdoption > 0 ? Math.round((newKundeCount / totalAdoption) * 100) : 0;
+            document.getElementById('kpi-upsell').innerText = `${upsellPerc}% / ${newPerc}%`;
+            
+            document.getElementById('kpi-churn').innerText = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(paidChurnMrr);
+            document.getElementById('kpi-churn-sub').innerText = `(Entspricht ${paidChurnCount} Verträgen)`;
+
+            // Prozentwerte für Produktverteilung berechnen
+            const totalProducts = aiPackCount + aiHumanCount;
+            const packPerc = totalProducts > 0 ? Math.round((aiPackCount / totalProducts) * 100) : 0;
+            const humanPerc = totalProducts > 0 ? Math.round((aiHumanCount / totalProducts) * 100) : 0;
+
+            // Charts zeichnen
+            renderDonutCharts(aiPackCount, aiHumanCount, activeBookings, evalBookings, packPerc, humanPerc);
+            renderWeeklyTrendChart(weeklyDataMap, currentWeekStr);
+            renderMonthlyCharts(monthlyDataMap);
+        }
+
+        function renderDonutCharts(aiPackCount, aiHumanCount, activeBookings, evalBookings, packPerc = 0, humanPerc = 0) {
+            if(productChartInstance) productChartInstance.destroy();
+            const ctxProd = document.getElementById('productChart').getContext('2d');
+            productChartInstance = new Chart(ctxProd, {
+                type: 'doughnut',
+                data: {
+                    labels: [`AI Pack (${packPerc}%)`, `AI Human Assist (${humanPerc}%)`],
+                    datasets: [{
+                        data: [aiPackCount, aiHumanCount],
+                        backgroundColor: ['#00ffc0', '#ab4ef0'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'right', labels: { color: '#fff', font: {size: 11} } }
+                    },
+                    cutout: '65%'
+                }
+            });
+
+            if(statusChartInstance) statusChartInstance.destroy();
+            const ctxStatus = document.getElementById('statusChart').getContext('2d');
+            const festeBuchungen = activeBookings - evalBookings;
+            statusChartInstance = new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: [`Feste Buchung (${festeBuchungen})`, `Testphase (${evalBookings})`],
+                    datasets: [{
+                        data: [festeBuchungen, evalBookings],
+                        backgroundColor: ['#fb3bfb', '#333333'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'right', labels: { color: '#fff', font: {size: 11} } }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        function renderWeeklyTrendChart(weeklyDataMap, currentWeekStr = null) {
+            // Sortieren der Wochen chronologisch (zwingend numerisch sortieren!)
+            const sortedKeys = Array.from(weeklyDataMap.keys()).sort((a, b) => a - b);
+            
+            const labels = [];
+            const newBookingsData = [];
+            const churnData = [];
+            const cumulativeMrrData = [];
+            
+            let currentCumMrr = 0;
+
+            sortedKeys.forEach(timestamp => {
+                const data = weeklyDataMap.get(timestamp);
+                labels.push(getWeekString(data.date));
+                
+                newBookingsData.push(data.newCount);
+                // Kündigungen als negativen Wert (damit der Balken nach unten wächst)
+                churnData.push(-data.churnCount); 
+                
+                // Netto MRR kumulieren
+                currentCumMrr += data.newMrr;
+                currentCumMrr -= data.churnMrr;
+                
+                // KAUFMÄNNISCH RUNDEN, um Floating-Point Fehler im Tooltip rigoros zu vermeiden
+                cumulativeMrrData.push(Math.round(currentCumMrr));
+            });
+
+            if(weeklyChartInstance) weeklyChartInstance.destroy();
+            const ctxWeekly = document.getElementById('weeklyChart').getContext('2d');
+            
+            weeklyChartInstance = new Chart(ctxWeekly, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            type: 'line',
+                            label: 'Kumulierter MRR (€)',
+                            data: cumulativeMrrData,
+                            borderColor: '#00ffc0',
+                            backgroundColor: 'rgba(0, 255, 192, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true,
+                            yAxisID: 'y1'
+                        },
+                        {
+                            type: 'bar',
+                            label: 'Neue Buchungen (Anzahl)',
+                            data: newBookingsData,
+                            backgroundColor: '#ab4ef0',
+                            borderRadius: 4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            type: 'bar',
+                            label: 'Kündigungen (Anzahl)',
+                            data: churnData,
+                            backgroundColor: '#ff3366', // Rote Farbe für Churn wieder hinzugefügt
+                            borderRadius: 4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            // Dummy-Dataset, um den Eintrag "Datenstand" sauber in die Legende zu bekommen
+                            type: 'line',
+                            label: 'Datenstand',
+                            data: [], 
+                            borderColor: '#f0ff00',
+                            borderWidth: 2,
+                            borderDash: [4, 4],
+                            backgroundColor: 'transparent',
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                plugins: [{
+                    id: 'todayLine',
+                    // afterDatasetsDraw zeichnet die Linie HINTER dem Tooltip, aber VOR den Balken
+                    afterDatasetsDraw: chart => {
+                        if (!chart.config.options.plugins.todayLine) return;
+                        const weekStr = chart.config.options.plugins.todayLine.currentWeekStr;
+                        if (!weekStr) return;
+
+                        const yAxis = chart.scales.y;
+                        const ctx = chart.ctx;
+
+                        let index = chart.data.labels.indexOf(weekStr);
+                        if (index !== -1) {
+                            // Exakte Pixel-Koordinate des echten Datenpunkts holen
+                            const meta = chart.getDatasetMeta(0);
+                            if (!meta || !meta.data || !meta.data[index]) return;
+                            const x = meta.data[index].x;
+
+                            ctx.save();
+                            // Neongelbe Trennlinie
+                            ctx.beginPath();
+                            ctx.moveTo(x, yAxis.top);
+                            ctx.lineTo(x, yAxis.bottom);
+                            ctx.lineWidth = 2;
+                            ctx.strokeStyle = '#f0ff00';
+                            ctx.setLineDash([4, 4]);
+                            ctx.stroke();
+                            ctx.restore();
+                        }
+                    }
+                }],
+                options: {
+                    layout: {
+                        padding: { top: 10 } 
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        todayLine: {
+                            currentWeekStr: currentWeekStr
+                        },
+                        legend: { 
+                            position: 'top', 
+                            labels: { 
+                                color: '#fff',
+                                usePointStyle: true,
+                                generateLabels: function(chart) {
+                                    // Greift die Standard-Labels ab und modifiziert nur "Datenstand"
+                                    const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+                                    labels.forEach(label => {
+                                        if (label.text === 'Datenstand') {
+                                            label.pointStyle = 'line';
+                                            label.lineWidth = 2;
+                                            label.lineDash = [4, 4];
+                                            label.strokeStyle = '#f0ff00';
+                                            label.fillStyle = 'transparent';
+                                        } else {
+                                            label.pointStyle = 'rectRounded';
+                                            label.lineWidth = 0;
+                                        }
+                                    });
+                                    return labels;
+                                }
+                            } 
+                        },
+                        tooltip: { 
+                            backgroundColor: '#111111', 
+                            titleColor: '#fff', 
+                            bodyColor: '#ccc', 
+                            borderColor: '#333', 
+                            borderWidth: 1,
+                            filter: function(tooltipItem) {
+                                // Verhindert, dass der Dummy-Eintrag im Hover-Tooltip auftaucht
+                                return tooltipItem.dataset.label !== 'Datenstand';
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.y !== null) {
+                                        let val = Math.abs(context.parsed.y);
+                                        if (context.dataset.label === 'Kumulierter MRR (€)') {
+                                            // Saubere Formatierung mit echten Tausenderpunkten
+                                            label += new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 }).format(val) + ' €';
+                                        } else {
+                                            label += val;
+                                        }
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            grid: { color: '#333', drawBorder: false },
+                            ticks: { 
+                                color: '#9ca3af',
+                                font: { size: 9 } // Schriftgröße um ca. 30% verkleinert
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            grid: { color: '#333', drawBorder: false },
+                            ticks: { 
+                                color: '#9ca3af', 
+                                stepSize: 1,
+                                // Y-Achsen Beschriftung immer positiv, auch wenn Balken nach unten gehen
+                                callback: function(value) { return Math.abs(value); } 
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            grid: { drawOnChartArea: false }, // Verhindert doppelte Grid-Linien
+                            ticks: { 
+                                color: '#00ffc0',
+                                callback: function(value) { return value + ' €'; }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderMonthlyCharts(monthlyDataMap) {
+            // Sortieren der Monate chronologisch
+            const sortedKeys = Array.from(monthlyDataMap.keys()).sort();
+            
+            const labels = [];
+            
+            // Daten-Arrays für Type Chart
+            const newLogoMrr = []; const newLogoCount = []; const newLogoContracts = [];
+            const upsellMrr = []; const upsellCount = []; const upsellContracts = [];
+            
+            // Daten-Arrays für Product Chart
+            const packMrr = []; const packCount = []; const packContracts = [];
+            const humanMrr = []; const humanCount = []; const humanContracts = [];
+
+            sortedKeys.forEach(key => {
+                const data = monthlyDataMap.get(key);
+                labels.push(getMonthString(data.date));
+                
+                newLogoMrr.push(data.newMrr); newLogoCount.push(data.newCount); newLogoContracts.push(data.newContracts);
+                upsellMrr.push(data.upsellMrr); upsellCount.push(data.upsellCount); upsellContracts.push(data.upsellContracts);
+                
+                packMrr.push(data.packMrr); packCount.push(data.packCount); packContracts.push(data.packContracts);
+                humanMrr.push(data.humanMrr); humanCount.push(data.humanCount); humanContracts.push(data.humanContracts);
+            });
+
+            // Geteilte Tooltip-Konfiguration, um MRR und Anzahl anzuzeigen
+            const customTooltip = {
+                backgroundColor: '#111111', 
+                titleColor: '#fff', 
+                bodyColor: '#ccc', 
+                borderColor: '#333', 
+                borderWidth: 1,
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (label) { label += ': '; }
+                        if (context.parsed.y !== null) {
+                            // MRR formatieren
+                            const mrrFormatted = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 }).format(context.parsed.y) + ' €';
+                            // Zugehörige Anzahl aus dem count-Array des Datasets holen
+                            const count = context.dataset.countData[context.dataIndex];
+                            label += `${mrrFormatted} (${count} Verträge)`;
+                        }
+                        return label;
+                    }
+                }
+            };
+
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                // Die Interaction-Regel gilt primär für die Tooltips (damit alle Werte des Monats angezeigt werden)
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { position: 'top', labels: { color: '#fff', usePointStyle: true, pointStyle: 'rectRounded' } },
+                    tooltip: customTooltip
+                },
+                // Mauszeiger zu Pointer machen, wenn man über einen exakten Balken hovert (nicht nur in der Spalte)
+                onHover: (event, elements, chart) => {
+                    const hovered = chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
+                    event.native.target.style.cursor = hovered.length > 0 ? 'pointer' : 'default';
+                },
+                // Klick-Logik, um das Details-Modal zu öffnen
+                onClick: (event, elements, chart) => {
+                    // WICHTIG: Wir zwingen Chart.js hier, genau das angeklickte Segment zu laden, statt den gesamten Stack
+                    const clickedElements = chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
+                    
+                    if (clickedElements.length > 0) {
+                        const element = clickedElements[0];
+                        const datasetIndex = element.datasetIndex;
+                        const index = element.index;
+                        const dataset = chart.data.datasets[datasetIndex];
+                        const contracts = dataset.contractsData[index];
+                        const monthLabel = chart.data.labels[index];
+                        const categoryLabel = dataset.label;
+                        
+                        showContractsModal(`${categoryLabel} - Buchungen im ${monthLabel}`, contracts);
+                    }
+                },
+                scales: {
+                    x: { stacked: true, grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 } } },
+                    y: { 
+                        stacked: true, 
+                        grid: { color: '#333', drawBorder: false }, 
+                        ticks: { color: '#9ca3af', callback: function(value) { return value + ' €'; } } 
+                    }
+                }
+            };
+
+            // 1. Chart: MRR nach Kundentyp
+            if(monthlyTypeChartInstance) monthlyTypeChartInstance.destroy();
+            const ctxType = document.getElementById('monthlyTypeChart').getContext('2d');
+            monthlyTypeChartInstance = new Chart(ctxType, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'New Logo',
+                            data: newLogoMrr,
+                            countData: newLogoCount,
+                            contractsData: newLogoContracts, // Vertragsdaten anhängen
+                            backgroundColor: '#f0ff00',
+                            borderRadius: 2
+                        },
+                        {
+                            label: 'Upsell',
+                            data: upsellMrr,
+                            countData: upsellCount,
+                            contractsData: upsellContracts, // Vertragsdaten anhängen
+                            backgroundColor: '#fb3bfb',
+                            borderRadius: 2
+                        }
+                    ]
+                },
+                options: commonOptions
+            });
+
+            // 2. Chart: MRR nach Produkt
+            if(monthlyProductChartInstance) monthlyProductChartInstance.destroy();
+            const ctxProduct = document.getElementById('monthlyProductChart').getContext('2d');
+            monthlyProductChartInstance = new Chart(ctxProduct, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'AI Pack',
+                            data: packMrr,
+                            countData: packCount,
+                            contractsData: packContracts, // Vertragsdaten anhängen
+                            backgroundColor: '#00ffc0',
+                            borderRadius: 2
+                        },
+                        {
+                            label: 'AI Human Assist',
+                            data: humanMrr,
+                            countData: humanCount,
+                            contractsData: humanContracts, // Vertragsdaten anhängen
+                            backgroundColor: '#ab4ef0',
+                            borderRadius: 2
+                        }
+                    ]
+                },
+                options: commonOptions
+            });
+        }
+
+        // Init mit leeren Werten (warten auf Upload)
+        window.addEventListener('DOMContentLoaded', () => {
+            Chart.defaults.color = '#a3a3a3';
+            Chart.defaults.font.family = 'Outfit, sans-serif';
+
+            // Initiale leere Charts zeichnen
+            renderDonutCharts(0, 0, 0, 0);
+            renderWeeklyTrendChart(new Map(), null);
+            renderMonthlyCharts(new Map());
+        });
+
+        // File Upload Handling
+        document.getElementById('csvFileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Update UI mit Zeitstempel
+            const dateObj = new Date(file.lastModified);
+            const tsElement = document.getElementById('dataTimestamp');
+            tsElement.innerText = `Datenstand: ${dateObj.toLocaleDateString('de-DE')} um ${dateObj.toLocaleTimeString('de-DE', {hour: '2-digit', minute:'2-digit'})} Uhr`;
+            tsElement.classList.remove('hidden');
+
+            Papa.parse(file, {
+                header: true,
+                delimiter: ";",
+                skipEmptyLines: true,
+                complete: function(results) {
+                    // file.lastModified mit übergeben, um die aktuelle Kalenderwoche für die Linie zu bestimmen
+                    processData(results.data, file.lastModified);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
